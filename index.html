@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego de Control de Tono M&amp;M</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HUD Overlay -->
+  <div id="hud">
+    <span id="hud-note">Nota: —</span>
+    <span id="hud-hz">0 Hz</span>
+    <div id="level-meter">
+      <div id="level-fill"></div>
+    </div>
+    <span id="hud-force">Fuerza: 0.00</span>
+    <span id="hud-escaped">Escapados: 0 / 0</span>
+    <button id="btn-mic">Iniciar Micrófono</button>
+  </div>
+
+  <!-- Settings Panel -->
+  <div id="settings">
+    <h3>Ajustes</h3>
+    <label>
+      Dulces: <span id="val-candy">300</span>
+      <input type="range" id="slider-candy" min="200" max="500" value="300" step="10">
+    </label>
+    <label>
+      Impulso Base: <span id="val-impulse">1.0</span>
+      <input type="range" id="slider-impulse" min="0.2" max="3.0" value="1.0" step="0.1">
+    </label>
+    <label>
+      Sensibilidad Mic: <span id="val-sensitivity">1.0</span>
+      <input type="range" id="slider-sensitivity" min="0.2" max="3.0" value="1.0" step="0.1">
+    </label>
+    <label>
+      Velocidad Tapa: <span id="val-capspeed">0.5</span>
+      <input type="range" id="slider-capspeed" min="0.1" max="2.0" value="0.5" step="0.05">
+    </label>
+    <button id="btn-restart">Reiniciar</button>
+  </div>
+
+  <!-- Win Screen -->
+  <div id="win-screen" class="hidden">
+    <div id="win-content">
+      <h1>¡GANASTE!</h1>
+      <p>¡Todos los dulces escaparon por la tapa!</p>
+      <button id="btn-play-again">Jugar de Nuevo</button>
+    </div>
+  </div>
+
+  <!-- Error Overlay -->
+  <div id="error-overlay" class="hidden">
+    <p id="error-msg"></p>
+    <button id="btn-error-dismiss">OK</button>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/",
+      "rapier": "https://cdn.jsdelivr.net/npm/@dimforge/rapier3d-compat@0.14.0/rapier.es.js"
+    }
+  }
+  </script>
+  <script type="module" src="js/main.js"></script>
+</body>
+
+</html>
