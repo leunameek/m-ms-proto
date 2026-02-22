@@ -43,7 +43,6 @@ export const state = {
   // Animation
   lastTime: 0,
   physicsAccum: 0,
-  won: false,
 
   // Pre-allocated reusables
   _mat4: new THREE.Matrix4(),

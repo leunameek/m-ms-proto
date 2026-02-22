@@ -33,8 +33,8 @@ export function createFloorImage() {
   ctx.textBaseline = 'middle';
   ctx.shadowColor = 'rgba(0,0,0,0.5)';
   ctx.shadowBlur = 10;
-  ctx.fillText('HIDDEN', size / 2, size / 2 - 40);
-  ctx.fillText('IMAGE', size / 2, size / 2 + 40);
+  ctx.fillText('FUTURO', size / 2, size / 2 - 40);
+  ctx.fillText('LOGO', size / 2, size / 2 + 40);
 
   const texture = new THREE.CanvasTexture(canvas);
   const geo = new THREE.PlaneGeometry(CONFIG.boxWidth - 0.1, CONFIG.boxDepth - 0.1);

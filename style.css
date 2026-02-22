@@ -108,44 +108,6 @@ canvas {
 }
 #btn-restart:hover { background: rgba(255, 152, 0, 0.2); }
 
-/* Win Screen */
-#win-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.85);
-}
-
-#win-content {
-  text-align: center;
-}
-
-#win-content h1 {
-  font-size: 64px;
-  color: #ffd700;
-  margin-bottom: 16px;
-}
-
-#win-content p {
-  font-size: 20px;
-  margin-bottom: 24px;
-}
-
-#btn-play-again {
-  padding: 10px 32px;
-  border: 2px solid #ffd700;
-  background: transparent;
-  color: #ffd700;
-  font-family: inherit;
-  font-size: 18px;
-  cursor: pointer;
-  border-radius: 6px;
-}
-#btn-play-again:hover { background: rgba(255, 215, 0, 0.2); }
-
 /* Error */
 #error-overlay {
   position: fixed;

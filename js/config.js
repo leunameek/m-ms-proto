@@ -14,7 +14,7 @@ export const CONFIG = {
   capRotationSpeed: 0.5,
 
   // Candies
-  candyCount: 300,
+  candyCount: 5000,
   candyRadius: 0.18,
   candyRestitution: 0.3,
   candyFriction: 0.4,

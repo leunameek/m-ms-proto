@@ -6,7 +6,6 @@ import { checkEscapedCandies, createCandies } from './candies.js';
 import { updateHUD } from './hud.js';
 
 export function animate(timestamp) {
-  if (state.won) return;
   requestAnimationFrame(animate);
 
   // Delta time (clamped)
@@ -61,12 +60,6 @@ export function animate(timestamp) {
   // Check escaped
   checkEscapedCandies();
 
-  // Win condition
-  if (state.escapedCount >= Math.floor(state.totalCandies * CONFIG.winRatio)) {
-    state.won = true;
-    document.getElementById('win-screen').classList.remove('hidden');
-  }
-
   // Update HUD
   updateHUD();
 
@@ -75,8 +68,6 @@ export function animate(timestamp) {
 }
 
 export function restart() {
-  document.getElementById('win-screen').classList.add('hidden');
-  state.won = false;
   state.lastTime = 0;
   state.physicsAccum = 0;
   state.escapedCount = 0;

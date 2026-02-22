@@ -53,7 +53,6 @@ export function bindUI(callbacks) {
 
   // Restart
   document.getElementById('btn-restart').addEventListener('click', callbacks.restart);
-  document.getElementById('btn-play-again').addEventListener('click', callbacks.restart);
 
   // Error dismiss
   document.getElementById('btn-error-dismiss').addEventListener('click', () => {
