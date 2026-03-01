@@ -44,7 +44,7 @@ export const CONFIG = {
 
   // Escape detection
   escapeMargin: 0.5,
-  escapeHoleRadius: 1.4,
+  escapeHoleRadius: 1.6,
 
   // M&M colors
   candyColors: [0xb11224, 0x2f9e44, 0x1971c2, 0xff6d00, 0x6d4c41, 0xfdd835],

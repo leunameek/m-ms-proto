@@ -37,7 +37,7 @@ export function createFloorImage() {
   ctx.fillText('LOGO', size / 2, size / 2 + 40);
 
   const texture = new THREE.CanvasTexture(canvas);
-  const geo = new THREE.PlaneGeometry(CONFIG.boxWidth - 0.1, CONFIG.boxDepth - 0.1);
+  const geo = new THREE.CircleGeometry(CONFIG.boxWidth / 2 * 0.72, 48);
   const mat = new THREE.MeshStandardMaterial({ map: texture });
   const mesh = new THREE.Mesh(geo, mat);
   mesh.rotation.x = -Math.PI / 2;

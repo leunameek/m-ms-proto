@@ -1,6 +1,7 @@
 import { CONFIG } from './config.js';
 import { state } from './state.js';
 import { initAudio, stopAudio } from './audio.js';
+import { setCameraMode } from './scene.js';
 
 export function showError(msg) {
   document.getElementById('error-msg').textContent = msg;
@@ -49,6 +50,20 @@ export function bindUI(callbacks) {
   sliderCapspeed.addEventListener('input', () => {
     CONFIG.capRotationSpeed = parseFloat(sliderCapspeed.value);
     document.getElementById('val-capspeed').textContent = sliderCapspeed.value;
+  });
+
+  // Camera toggle
+  const btnFree = document.getElementById('btn-free');
+  const btnIso  = document.getElementById('btn-iso');
+  btnFree.addEventListener('click', () => {
+    setCameraMode('free');
+    btnFree.classList.add('active');
+    btnIso.classList.remove('active');
+  });
+  btnIso.addEventListener('click', () => {
+    setCameraMode('iso');
+    btnIso.classList.add('active');
+    btnFree.classList.remove('active');
   });
 
   // Restart

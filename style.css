@@ -64,6 +64,26 @@ canvas {
 #btn-mic.active { border-color: #f44336; color: #f44336; }
 #btn-mic.active:hover { background: rgba(244, 67, 54, 0.2); }
 
+/* Camera toggle */
+#camera-toggle {
+  display: flex;
+  gap: 4px;
+  margin-left: 8px;
+}
+.cam-btn {
+  padding: 4px 10px;
+  border: 1px solid #555;
+  background: transparent;
+  color: #888;
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cam-btn:hover { background: rgba(255, 255, 255, 0.08); }
+.cam-btn.active { border-color: #4dd9e8; color: #4dd9e8; background: rgba(77, 217, 232, 0.12); }
+
 /* Settings */
 #settings {
   position: fixed;

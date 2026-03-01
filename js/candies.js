@@ -39,16 +39,20 @@ export function createCandies(count) {
   state.scene.add(mesh);
   state.candyMesh = mesh;
 
-  const hw = CONFIG.boxWidth / 2 - r * 2;
-  const hd = CONFIG.boxDepth / 2 - r * 2;
-  const maxY = CONFIG.boxHeight - r * 2;
+  // Spawn within a cylinder matching the jar's belly (inner radius ~3.15).
+  // Use 80% of max belly radius to keep candies safely away from the walls.
+  const spawnR = CONFIG.boxWidth / 2 * 0.8 - r;
+  // Limit height to the wide belly section (avoid the narrow neck region).
+  const maxY = CONFIG.boxHeight * 0.75;
   const colors = CONFIG.candyColors;
   const color = new THREE.Color();
 
   for (let i = 0; i < count; i++) {
-    const x = (Math.random() - 0.5) * 2 * hw;
+    const angle = Math.random() * Math.PI * 2;
+    const dist = Math.sqrt(Math.random()) * spawnR;  // sqrt = uniform disk dist
+    const x = Math.cos(angle) * dist;
     const y = r + Math.random() * (maxY - r);
-    const z = (Math.random() - 0.5) * 2 * hd;
+    const z = Math.sin(angle) * dist;
 
     // Physics body
     const bodyDesc = R.RigidBodyDesc.dynamic()
