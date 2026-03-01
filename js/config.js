@@ -9,7 +9,7 @@ export const CONFIG = {
   holeSize: 2.0,
 
   // Cap
-  capRadius: 1.8,
+  capRadius: 2.2,
   capWindowDeg: 60,
   capRotationSpeed: 0.5,
 

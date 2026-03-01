@@ -16,6 +16,7 @@ const INNER_PROFILE = [
   [2.45, 6.50],  // narrowing
   [2.05, 7.20],  // neck
   [2.00, 8.00],  // opening
+  [2.00, 8.40],  // collar — extends above cap level (8.15) to seal the gap
 ];
 
 // Outer profile [radius, y] — visual glass shell, slightly larger than inner.
@@ -117,34 +118,37 @@ function createCap() {
 
   const wingHeight = 0.3; // used only by visual plates below
 
-  // Replace cuboid wing colliders with exact sector-trimesh colliders.
-  // Angular ranges match the visual plates precisely:
-  //   Sector 1: windowHalfRad  →  π          (30° → 180°)
-  //   Sector 2: π+windowHalfRad → 2π         (210° → 360°)
-  // openingR extends slightly beyond the jar inner rim (2.0) for full coverage.
-  // Winding (center → arc_i → arc_{i+1}) on a CCW arc produces a −Y normal,
-  // so Rapier blocks candies that approach from below. ✓
-  const openingR  = 2.2;
-  const sectorSegs = 24;
+  // IMPORTANT: Rapier only supports trimesh on *fixed* bodies — trimesh on a
+  // kinematic body does not rotate with it. Use convex hull instead, which
+  // works on kinematic bodies and rotates correctly.
+  //
+  // Angular ranges match the visual plates:
+  //   Sector 1: windowHalfRad → π          (30° → 180°)
+  //   Sector 2: π+windowHalfRad → 2π       (210° → 360°)
+  // openingR is set larger than the jar inner rim (2.0) to guarantee no candy
+  // can squeeze through the edge between the wall and the cap.
+  const openingR   = 2.8;
+  const sectorSegs = 28;
+  const sectorH    = 0.25; // half-height — gives the hull proper 3D extent
 
   function addSector(fromAngle, toAngle) {
-    const pts = [0, 0, 0]; // center vertex at local origin
+    const pts = [];
+    // Center at top and bottom so the hull has thickness
+    pts.push(0, -sectorH, 0);
+    pts.push(0,  sectorH, 0);
     for (let i = 0; i <= sectorSegs; i++) {
       const a = fromAngle + (toAngle - fromAngle) * i / sectorSegs;
-      pts.push(Math.cos(a) * openingR, 0, Math.sin(a) * openingR);
+      const x = Math.cos(a) * openingR;
+      const z = Math.sin(a) * openingR;
+      pts.push(x, -sectorH, z);
+      pts.push(x,  sectorH, z);
     }
-    const idx = [];
-    for (let i = 0; i < sectorSegs; i++) {
-      idx.push(0, i + 1, i + 2); // −Y normal → blocks from below
-    }
-    R.world.createCollider(
-      R.ColliderDesc.trimesh(new Float32Array(pts), new Uint32Array(idx)).setFriction(0.3),
-      state.capBody
-    );
+    const desc = R.ColliderDesc.convexHull(new Float32Array(pts));
+    if (desc) state.world.createCollider(desc.setFriction(0.3), state.capBody);
   }
 
-  addSector(windowHalfRad,              Math.PI);           // sector 1 — matches plate 1
-  addSector(Math.PI + windowHalfRad,    2 * Math.PI);       // sector 2 — matches plate 2
+  addSector(windowHalfRad,           Math.PI);       // sector 1 — matches plate 1
+  addSector(Math.PI + windowHalfRad, 2 * Math.PI);  // sector 2 — matches plate 2
 
   const plateAngle = Math.PI - windowHalfRad;
   const plateMat = new THREE.MeshStandardMaterial({
