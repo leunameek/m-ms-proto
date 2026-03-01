@@ -115,28 +115,36 @@ function createCap() {
   const bodyDesc = R.RigidBodyDesc.kinematicPositionBased().setTranslation(0, capY, 0);
   state.capBody = state.world.createRigidBody(bodyDesc);
 
-  // Two wing colliders covering ~150° each (300° total, 60° gap)
-  const wingLength = radius;
-  const wingWidth = radius * 0.9;
-  const wingHeight = 0.3;
+  const wingHeight = 0.3; // used only by visual plates below
 
-  const angle1 = Math.PI / 2 + windowHalfRad;
-  const cx1 = Math.cos(angle1) * wingLength * 0.5;
-  const cz1 = Math.sin(angle1) * wingLength * 0.5;
-  const collDesc1 = R.ColliderDesc.cuboid(wingWidth, wingHeight / 2, wingLength * 0.5)
-    .setTranslation(cx1, 0, cz1)
-    .setRotation({ x: 0, y: Math.sin(angle1 / 2), z: 0, w: Math.cos(angle1 / 2) })
-    .setFriction(0.3);
-  state.world.createCollider(collDesc1, state.capBody);
+  // Replace cuboid wing colliders with exact sector-trimesh colliders.
+  // Angular ranges match the visual plates precisely:
+  //   Sector 1: windowHalfRad  →  π          (30° → 180°)
+  //   Sector 2: π+windowHalfRad → 2π         (210° → 360°)
+  // openingR extends slightly beyond the jar inner rim (2.0) for full coverage.
+  // Winding (center → arc_i → arc_{i+1}) on a CCW arc produces a −Y normal,
+  // so Rapier blocks candies that approach from below. ✓
+  const openingR  = 2.2;
+  const sectorSegs = 24;
 
-  const angle2 = -(Math.PI / 2 + windowHalfRad);
-  const cx2 = Math.cos(angle2) * wingLength * 0.5;
-  const cz2 = Math.sin(angle2) * wingLength * 0.5;
-  const collDesc2 = R.ColliderDesc.cuboid(wingWidth, wingHeight / 2, wingLength * 0.5)
-    .setTranslation(cx2, 0, cz2)
-    .setRotation({ x: 0, y: Math.sin(angle2 / 2), z: 0, w: Math.cos(angle2 / 2) })
-    .setFriction(0.3);
-  state.world.createCollider(collDesc2, state.capBody);
+  function addSector(fromAngle, toAngle) {
+    const pts = [0, 0, 0]; // center vertex at local origin
+    for (let i = 0; i <= sectorSegs; i++) {
+      const a = fromAngle + (toAngle - fromAngle) * i / sectorSegs;
+      pts.push(Math.cos(a) * openingR, 0, Math.sin(a) * openingR);
+    }
+    const idx = [];
+    for (let i = 0; i < sectorSegs; i++) {
+      idx.push(0, i + 1, i + 2); // −Y normal → blocks from below
+    }
+    R.world.createCollider(
+      R.ColliderDesc.trimesh(new Float32Array(pts), new Uint32Array(idx)).setFriction(0.3),
+      state.capBody
+    );
+  }
+
+  addSector(windowHalfRad,              Math.PI);           // sector 1 — matches plate 1
+  addSector(Math.PI + windowHalfRad,    2 * Math.PI);       // sector 2 — matches plate 2
 
   const plateAngle = Math.PI - windowHalfRad;
   const plateMat = new THREE.MeshStandardMaterial({
